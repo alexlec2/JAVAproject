@@ -1,0 +1,68 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import javax.swing.JOptionPane;
+
+
+public class login_form extends javax.swing.JFrame{
+    private JPanel mainPanel;
+    private JTextField txtlogin;
+    private JButton LOGINButton;
+    private JPasswordField passwordField;
+    private JPanel panelError;
+
+    Statement statement;
+
+    public login_form() {
+        setContentPane(mainPanel);
+        setTitle("Class exercise 3 part 2");
+        setSize(400,800);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
+        panelError.setVisible(false);
+
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "rootroot");
+
+            statement = connection.createStatement();
+            //JOptionPane.showMessageDialog(null, "Database connected");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+
+        LOGINButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = txtlogin.getText();
+                String password = "";
+                char[] pass = passwordField.getPassword();
+
+                for (int i = 0; i < pass.length; i++){
+                    password += pass[i];
+                }
+
+                String queryString = "select id_user from table_user where username='"+username+"' and password='"+password+"';";
+
+                try {
+                    ResultSet result = statement.executeQuery(queryString);
+                    if(result.next()){
+                        //JOptionPane.showMessageDialog(null, "Hello "+result.getString(1));
+                        setVisible(false);
+                        main_interface new_main = new main_interface(Integer.parseInt(result.getString(1)));
+                    }
+                    else {
+                        panelError.setVisible(true);
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
+}

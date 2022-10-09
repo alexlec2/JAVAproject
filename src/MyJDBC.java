@@ -14,7 +14,7 @@ public class MyJDBC  {
             ResultSet resultSet = statement.executeQuery("select * from designation");
 
             while (resultSet.next()){
-                System.out.println(resultSet.getString("title"));
+                System.out.println(resultSet.getString("code")+ " " +resultSet.getString("title"));
             }
         }
         catch (Exception e){
