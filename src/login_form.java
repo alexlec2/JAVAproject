@@ -24,7 +24,7 @@ public class login_form extends javax.swing.JFrame{
         panelError.setVisible(false);
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "root", "rootroot");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_restaurant", "root", "rootroot");
 
             statement = connection.createStatement();
             //JOptionPane.showMessageDialog(null, "Database connected");
@@ -47,14 +47,14 @@ public class login_form extends javax.swing.JFrame{
                     password += pass[i];
                 }
 
-                String queryString = "select id_user from table_user where username='"+username+"' and password='"+password+"';";
+                String queryString = "select id_user from `user` where username='"+username+"' and password='"+password+"';";
 
                 try {
                     ResultSet result = statement.executeQuery(queryString);
                     if(result.next()){
                         //JOptionPane.showMessageDialog(null, "Hello "+result.getString(1));
-                        setVisible(false);
                         main_interface new_main = new main_interface(Integer.parseInt(result.getString(1)));
+                        setVisible(false);
                     }
                     else {
                         panelError.setVisible(true);
