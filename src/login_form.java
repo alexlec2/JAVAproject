@@ -24,7 +24,12 @@ public class login_form extends javax.swing.JFrame{
         panelError.setVisible(false);
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_restaurant", "root", "rootroot");
+            String ip = "212.227.188.100";
+            String port = "2022";
+            String user = "javaRestaurant";
+            String password = "$ja3va!R3st5auran5t.926";
+            String database_name = "db_restaurant";
+            Connection connection = DriverManager.getConnection("jdbc:mysql://"+ip+":"+port+"/"+database_name+"", user, password);
 
             statement = connection.createStatement();
             //JOptionPane.showMessageDialog(null, "Database connected");
