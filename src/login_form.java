@@ -17,7 +17,7 @@ public class login_form extends javax.swing.JFrame{
 
     public login_form() {
         setContentPane(mainPanel);
-        setTitle("Class exercise 3 part 2");
+        setTitle("Java Project");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -58,8 +58,8 @@ public class login_form extends javax.swing.JFrame{
                     ResultSet result = statement.executeQuery(queryString);
                     if(result.next()){
                         //JOptionPane.showMessageDialog(null, "Hello "+result.getString(1));
-                        main_interface new_main = new main_interface(Integer.parseInt(result.getString(1)));
-                        setVisible(false);
+                        new main_interface(Integer.parseInt(result.getString(1)));
+                        dispose();
                     }
                     else {
                         panelError.setVisible(true);
