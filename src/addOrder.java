@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.text.DecimalFormat;
 
 public final class addOrder extends javax.swing.JFrame{
     private JPanel addOrderMainPanel;
@@ -16,10 +17,13 @@ public final class addOrder extends javax.swing.JFrame{
     private JPanel dishPanel;
     private JPanel appetizerPanel;
     private JPanel drinkPanel;
-    private JLabel lblTotal;
+    private JLabel lblTotalOrder;
     private JPanel panelTabs;
+    private JLabel lblTotalPrice;
     int count = 0;
+    double total_price = 0;
     Statement statement;
+    DecimalFormat df = new DecimalFormat("#.##");
 
     public static void main(String[] args) {
         new addOrder(1);
@@ -32,8 +36,6 @@ public final class addOrder extends javax.swing.JFrame{
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
-
-
         returnButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -43,34 +45,7 @@ public final class addOrder extends javax.swing.JFrame{
         });
     }
 
-    private void displayDishTable(String query1, JPanel panel) throws SQLException {
-        ResultSet result1 = statement.executeQuery(query1);
-
-        while (result1.next()){
-            JPanel panelTemp = new JPanel();
-            panelTemp.add(new JLabel(result1.getString(2)));
-            panelTemp.add(new JLabel("(Restant: "+result1.getString(5)+")"));
-            SpinnerModel value = new SpinnerNumberModel(0, 0, Integer.parseInt(result1.getString(5)), 1);
-            JSpinner spinner = new JSpinner(value);
-            spinner.addChangeListener(new ChangeListener() {
-                  @Override
-                  public void stateChanged(ChangeEvent e) {
-                      Component component = panelTemp.getComponent(2);
-                      count += (int) ((JSpinner)component).getValue();
-                      //JOptionPane.showMessageDialog(null, ((JSpinner)component).getValue());
-                      JSpinner s = (JSpinner) e.getSource();
-                      JOptionPane.showMessageDialog(null, s.getValue().toString());
-                      lblTotal.setText("The total number of command is : " + count);
-                  }
-            });
-            panelTemp.add(spinner);
-            panel.add(panelTemp);
-        }
-        result1.close();
-    }
-
-    private void createUIComponents() {
-        //connection database
+    public Statement connection(){
         try {
             String ip = "212.227.188.100";
             String port = "2022";
@@ -80,11 +55,71 @@ public final class addOrder extends javax.swing.JFrame{
             Connection connection = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + database_name + "", user, password);
 
             statement = connection.createStatement();
+            return statement;
             //JOptionPane.showMessageDialog(null, "Database connected");
         }
-        catch (Exception e){
-            e.printStackTrace();
+        catch (Exception ex){
+            ex.printStackTrace();
+            return null;
         }
+    }
+
+    private void displayDishTable(String query1, JPanel panel) throws SQLException {
+        ResultSet result1 = statement.executeQuery(query1);
+
+        while (result1.next()){
+            JPanel panelTemp = new JPanel();
+            panelTemp.add(new JLabel(result1.getString(2)));
+            panelTemp.add(new JLabel("(Restant: "+result1.getString(5)+")"));
+            JTextField txtNumber;
+            panelTemp.add(txtNumber = new JTextField("0", 2));
+            txtNumber.setEditable(false);
+
+            JButton plus, minus;
+            panelTemp.add(plus = new JButton("+"));
+            panelTemp.add(minus = new JButton("-"));
+
+            plus.setPreferredSize(new Dimension(20, 20));
+            minus.setPreferredSize(new Dimension(20, 20));
+            String price = result1.getString(3);
+            String availibilty = result1.getString(5);
+            plus.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(Integer.parseInt(txtNumber.getText()) < Integer.parseInt(availibilty)){
+                        count++;
+                        txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())+1));
+                        lblTotalOrder.setText("The total number of command is : " + count+".");
+
+                        total_price = Double.parseDouble(price)+total_price;
+
+                        lblTotalPrice.setText("The total price is : " + df.format(total_price) +"$.");
+                    }
+                }
+            });
+            minus.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(Integer.parseInt(txtNumber.getText()) > 0){
+                        count--;
+                        txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())-1));
+                        lblTotalOrder.setText("The total number of command is : " + count+".");
+
+                        total_price = total_price-Double.parseDouble(price);
+
+                        lblTotalPrice.setText("The total price is : " + df.format(total_price) +"$.");
+                    }
+                }
+            });
+
+            panel.add(panelTemp);
+        }
+        result1.close();
+    }
+
+    private void createUIComponents() {
+        //connection database
+        statement = connection();
 
         //Display table dish + elements in tabs
         try{
