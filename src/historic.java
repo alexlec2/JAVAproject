@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -11,7 +12,7 @@ public class historic extends javax.swing.JFrame{
     private JTable historicTable;
     private JPanel tabelPanel;
     private JButton showButton;
-    private JButton button2;
+    private JComboBox comboBox1;
 
     Statement statement;
 
@@ -23,7 +24,8 @@ public class historic extends javax.swing.JFrame{
         setTitle("Java Project - Historic");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
+
+
 
         try{
             String ip = "212.227.188.100";
@@ -38,11 +40,29 @@ public class historic extends javax.swing.JFrame{
         catch (Exception e){
             e.printStackTrace();
         }
+        try{
+            ResultSet res_table = statement.executeQuery("select id_table from `table`;");
+            ArrayList<Integer> list_table = new ArrayList<Integer>(100);
+            int i = 0;
+            while(res_table.next()){
+                list_table.add(Integer.parseInt(res_table.getString("id_table")));
+            }
+            for(int j=0; j<list_table.size();j++){
+                comboBox1.addItem("Table "+list_table.get(j));
+            }
+        }catch (SQLException ex){
+            System.out.println(ex);
+        }
 
+        setVisible(true);
         showButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final String  QUERY = "select date_order, number, name, price, location from `order`, ordered, `table`, dish WHERE `order`.id_table=`table`.id_table and ordered.id_dish=dish.id_dish and `order`.status_order='ended';";
+                String x = (String) comboBox1.getSelectedItem();
+                int index;
+                index = Integer.parseInt(String.valueOf(x.charAt(x.length()-1)));
+
+                final String  QUERY = "select date_order, number, name, price, location from `order`, ordered, `table`, dish WHERE `order`.id_table=`table`.id_table and ordered.id_dish=dish.id_dish and `order`.status_order='ended' and `table`.id_table="+index+";";
                 try{
                     ResultSet rs = statement.executeQuery(QUERY);
 

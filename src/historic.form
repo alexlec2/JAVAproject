@@ -47,13 +47,11 @@
               <text value="Show"/>
             </properties>
           </component>
-          <component id="a3df" class="javax.swing.JButton" binding="button2" default-binding="true">
+          <component id="5adeb" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties>
-              <text value="Button"/>
-            </properties>
+            <properties/>
           </component>
         </children>
       </grid>
