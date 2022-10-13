@@ -9,9 +9,8 @@ import java.util.ArrayList;
 
 import project.MyJDBC;
 
-public final class addOrder extends javax.swing.JFrame{
+public final class addOrderPage extends javax.swing.JFrame{
     private JPanel addOrderMainPanel;
-    private JButton returnButton;
     private JTabbedPane tabbedPane1;
     private JPanel dessertPanel;
     private JPanel dishPanel;
@@ -22,6 +21,7 @@ public final class addOrder extends javax.swing.JFrame{
     private JLabel lblTotalPrice;
     private JButton toOrderButton;
     private JComboBox tableComboBox;
+    private JButton returnButton1;
     int count = 0;
     double total_price = 0;
     Statement statement;
@@ -31,12 +31,12 @@ public final class addOrder extends javax.swing.JFrame{
     DecimalFormat df = new DecimalFormat("#.##");
 
     public static void main(String[] args) {
-        new addOrder(1);
+        new addOrderPage(1);
     }
 
-    addOrder(int id_user){
+    addOrderPage(int id_user){
         setContentPane(addOrderMainPanel);
-        setTitle("Java Project");
+        setTitle("Java Project Add order page");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,13 +58,6 @@ public final class addOrder extends javax.swing.JFrame{
 
         setVisible(true);
 
-        returnButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new main_interface(id_user);
-                dispose();
-            }
-        });
         toOrderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -95,6 +88,13 @@ public final class addOrder extends javax.swing.JFrame{
             }
         });
 
+        returnButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new mainInterfacePage(id_user);
+                dispose();
+            }
+        });
     }
 
     private void displayDishTable(String query1, JPanel panel) throws SQLException {

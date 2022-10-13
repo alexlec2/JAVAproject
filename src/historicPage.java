@@ -7,21 +7,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
-public class historic extends javax.swing.JFrame{
+public class historicPage extends javax.swing.JFrame{
     private JPanel mainPanel;
     private JTable historicTable;
     private JPanel tabelPanel;
     private JButton showButton;
     private JComboBox comboBox1;
+    private JButton returnButton4;
 
     Statement statement;
 
-    public static void main(String[] args) {
-        new historic();
-    }
-    historic(){
+    historicPage(int id_user){
         setContentPane(mainPanel);
-        setTitle("Java Project - Historic");
+        setTitle("Java Project Historic page");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,6 +58,13 @@ public class historic extends javax.swing.JFrame{
                     System.out.println(ex);
                 }
 
+            }
+        });
+        returnButton4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new mainInterfacePage(id_user);
+                dispose();
             }
         });
     }
