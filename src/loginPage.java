@@ -6,18 +6,19 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 
 
-public class login_form extends javax.swing.JFrame{
+public class loginPage extends javax.swing.JFrame{
     private JPanel mainPanel;
     private JTextField txtlogin;
     private JButton LOGINButton;
     private JPasswordField passwordField;
     private JPanel panelError;
+    int id_login;
 
     Statement statement;
 
-    public login_form() {
+    public loginPage() {
         setContentPane(mainPanel);
-        setTitle("Java Project");
+        setTitle("Java Project Login Page");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
@@ -42,7 +43,8 @@ public class login_form extends javax.swing.JFrame{
                     ResultSet result = statement.executeQuery(queryString);
                     if(result.next()){
                         //JOptionPane.showMessageDialog(null, "Hello "+result.getString(1));
-                        new main_interface(Integer.parseInt(result.getString(1)));
+                        id_login = Integer.parseInt(result.getString(1));
+                        new mainInterfacePage(id_login);
                         dispose();
                     }
                     else {
@@ -53,5 +55,6 @@ public class login_form extends javax.swing.JFrame{
                 }
             }
         });
+
     }
 }
