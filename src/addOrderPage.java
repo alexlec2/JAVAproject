@@ -22,6 +22,7 @@ public final class addOrderPage extends javax.swing.JFrame{
     private JButton toOrderButton;
     private JComboBox tableComboBox;
     private JButton returnButton1;
+    private JButton historicButton4;
     int count = 0;
     double total_price = 0;
     Statement statement;
@@ -92,6 +93,14 @@ public final class addOrderPage extends javax.swing.JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 new mainInterfacePage(id_user);
+                dispose();
+            }
+        });
+
+        historicButton4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new historicPage(id_user);
                 dispose();
             }
         });

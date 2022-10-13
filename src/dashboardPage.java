@@ -6,6 +6,7 @@ public class dashboardPage extends javax.swing.JFrame{
 
     private JPanel mainDashboardPanel;
     private JButton returnButton3;
+    private JButton historicButton3;
 
     dashboardPage(int id_user){
         setContentPane(mainDashboardPanel);
@@ -18,6 +19,14 @@ public class dashboardPage extends javax.swing.JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 new mainInterfacePage(id_user);
+                dispose();
+            }
+        });
+
+        historicButton3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new historicPage(id_user);
                 dispose();
             }
         });

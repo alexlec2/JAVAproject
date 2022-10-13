@@ -6,6 +6,7 @@ public class modifyOrderPage extends javax.swing.JFrame{
 
     private JPanel mainModifyPanel;
     private JButton returnButton5;
+    private JButton historicButton2;
 
     modifyOrderPage(int id_user){
         setContentPane(mainModifyPanel);
@@ -18,6 +19,13 @@ public class modifyOrderPage extends javax.swing.JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 new mainInterfacePage(id_user);
+                dispose();
+            }
+        });
+        historicButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new historicPage(id_user);
                 dispose();
             }
         });
