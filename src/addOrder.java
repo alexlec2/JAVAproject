@@ -1,13 +1,13 @@
-import javax.lang.model.element.Element;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import project.MyJDBC;
 
 public final class addOrder extends javax.swing.JFrame{
     private JPanel addOrderMainPanel;
@@ -20,9 +20,14 @@ public final class addOrder extends javax.swing.JFrame{
     private JLabel lblTotalOrder;
     private JPanel panelTabs;
     private JLabel lblTotalPrice;
+    private JButton toOrderButton;
+    private JComboBox tableComboBox;
     int count = 0;
     double total_price = 0;
     Statement statement;
+    int[] id_dish_array = new int[100];
+    ArrayList<Integer> id_dish_arrayD = new ArrayList<Integer>();
+
     DecimalFormat df = new DecimalFormat("#.##");
 
     public static void main(String[] args) {
@@ -34,6 +39,23 @@ public final class addOrder extends javax.swing.JFrame{
         setTitle("Java Project");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        statement = MyJDBC.connection(statement);
+
+        try{
+            ResultSet res_table = statement.executeQuery("select id_table from `table`;");
+            ArrayList<Integer> list_table = new ArrayList<Integer>(100);
+            int i = 0;
+            while(res_table.next()){
+                list_table.add(Integer.parseInt(res_table.getString("id_table")));
+            }
+            for(int j=0; j<list_table.size();j++){
+                tableComboBox.addItem("Table "+list_table.get(j));
+            }
+        }catch (SQLException sqlException){
+            JOptionPane.showMessageDialog(null, sqlException);
+        }
+
         setVisible(true);
 
         returnButton.addActionListener(new ActionListener() {
@@ -43,25 +65,36 @@ public final class addOrder extends javax.swing.JFrame{
                 dispose();
             }
         });
-    }
+        toOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-    public Statement connection(){
-        try {
-            String ip = "212.227.188.100";
-            String port = "2022";
-            String user = "javaRestaurant";
-            String password = "$ja3va!R3st5auran5t.926";
-            String database_name = "db_restaurant";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + database_name + "", user, password);
+                try{
+                    String id_table_string = (String) tableComboBox.getSelectedItem();
+                    int id_table = Integer.parseInt(String.valueOf(id_table_string.charAt(id_table_string.length()-1)));
+                    String queryAddOrder = "insert into db_restaurant.order (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', now());";
 
-            statement = connection.createStatement();
-            return statement;
-            //JOptionPane.showMessageDialog(null, "Database connected");
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-            return null;
-        }
+                    statement.execute(queryAddOrder);
+                    while(!id_dish_arrayD.isEmpty()){
+                        int dish_ordered = id_dish_arrayD.get(0);
+                        int count_dish_ordered=0;
+                        while(id_dish_arrayD.contains(dish_ordered)){
+                            count_dish_ordered++;
+                            id_dish_arrayD.remove(id_dish_arrayD.indexOf(dish_ordered));
+                        }
+                        String queryAddOrdered = "insert into ordered values(LAST_INSERT_ID(), "+dish_ordered+", "+count_dish_ordered+");";
+                        statement.execute(queryAddOrdered);
+                    }
+                    JOptionPane.showMessageDialog(null, "Added to the database!");
+
+                }
+                catch (SQLException sqlException){
+                    JOptionPane.showMessageDialog(null, sqlException);
+                }
+
+            }
+        });
+
     }
 
     private void displayDishTable(String query1, JPanel panel) throws SQLException {
@@ -69,7 +102,10 @@ public final class addOrder extends javax.swing.JFrame{
 
         while (result1.next()){
             JPanel panelTemp = new JPanel();
+            JLabel id_dish;
             panelTemp.add(new JLabel(result1.getString(2)));
+            panelTemp.add(id_dish = new JLabel(result1.getString(1)));
+            id_dish.setVisible(false);
             panelTemp.add(new JLabel("(Restant: "+result1.getString(5)+")"));
             JTextField txtNumber;
             panelTemp.add(txtNumber = new JTextField("0", 2));
@@ -81,6 +117,8 @@ public final class addOrder extends javax.swing.JFrame{
 
             plus.setPreferredSize(new Dimension(20, 20));
             minus.setPreferredSize(new Dimension(20, 20));
+
+            int id = Integer.parseInt(result1.getString(1));
             String price = result1.getString(3);
             String availibilty = result1.getString(5);
             plus.addActionListener(new ActionListener() {
@@ -88,6 +126,8 @@ public final class addOrder extends javax.swing.JFrame{
                 public void actionPerformed(ActionEvent e) {
                     if(Integer.parseInt(txtNumber.getText()) < Integer.parseInt(availibilty)){
                         count++;
+                        id_dish_arrayD.add(id);
+
                         txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())+1));
                         lblTotalOrder.setText("The total number of command is : " + count+".");
 
@@ -102,6 +142,8 @@ public final class addOrder extends javax.swing.JFrame{
                 public void actionPerformed(ActionEvent e) {
                     if(Integer.parseInt(txtNumber.getText()) > 0){
                         count--;
+                        id_dish_arrayD.remove(id_dish_arrayD.indexOf(id));
+
                         txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())-1));
                         lblTotalOrder.setText("The total number of command is : " + count+".");
 
@@ -119,7 +161,7 @@ public final class addOrder extends javax.swing.JFrame{
 
     private void createUIComponents() {
         //connection database
-        statement = connection();
+        statement = MyJDBC.connection(statement);
 
         //Display table dish + elements in tabs
         try{
@@ -144,6 +186,12 @@ public final class addOrder extends javax.swing.JFrame{
             drinkPanel = new JPanel();
             drinkPanel.setLayout(new BoxLayout(drinkPanel, BoxLayout.Y_AXIS));
             displayDishTable(query4, drinkPanel);
+
+
+            toOrderButton = new JButton("To order");
+
+
+
         }
         catch (Exception e){
             e.printStackTrace();

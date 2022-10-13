@@ -1,10 +1,10 @@
+import project.MyJDBC;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class historic extends javax.swing.JFrame{
@@ -25,21 +25,8 @@ public class historic extends javax.swing.JFrame{
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        statement = MyJDBC.connection(statement);
 
-
-        try{
-            String ip = "212.227.188.100";
-            String port = "2022";
-            String user = "javaRestaurant";
-            String password = "$ja3va!R3st5auran5t.926";
-            String database_name = "db_restaurant";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://"+ip+":"+port+"/"+database_name+"", user, password);
-
-            statement = connection.createStatement();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
         try{
             ResultSet res_table = statement.executeQuery("select id_table from `table`;");
             ArrayList<Integer> list_table = new ArrayList<Integer>(100);
