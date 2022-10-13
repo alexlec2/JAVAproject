@@ -1,9 +1,9 @@
+import project.MyJDBC;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import javax.swing.JOptionPane;
 
 
 public class login_form extends javax.swing.JFrame{
@@ -23,23 +23,7 @@ public class login_form extends javax.swing.JFrame{
         setVisible(true);
         panelError.setVisible(false);
 
-        try{
-            String ip = "212.227.188.100";
-            String port = "2022";
-            String user = "javaRestaurant";
-            String password = "$ja3va!R3st5auran5t.926";
-            String database_name = "db_restaurant";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://"+ip+":"+port+"/"+database_name+"", user, password);
-
-            statement = connection.createStatement();
-            //JOptionPane.showMessageDialog(null, "Database connected");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-
+        statement = MyJDBC.connection(statement);
 
         LOGINButton.addActionListener(new ActionListener() {
             @Override

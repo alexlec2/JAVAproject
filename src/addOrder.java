@@ -1,7 +1,4 @@
-import javax.lang.model.element.Element;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import project.MyJDBC;
 
 public final class addOrder extends javax.swing.JFrame{
     private JPanel addOrderMainPanel;
@@ -41,7 +40,8 @@ public final class addOrder extends javax.swing.JFrame{
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        statement = connection();
+        statement = MyJDBC.connection(statement);
+
         try{
             ResultSet res_table = statement.executeQuery("select id_table from `table`;");
             ArrayList<Integer> list_table = new ArrayList<Integer>(100);
@@ -97,25 +97,6 @@ public final class addOrder extends javax.swing.JFrame{
 
     }
 
-    public Statement connection(){
-        try {
-            String ip = "212.227.188.100";
-            String port = "2022";
-            String user = "javaRestaurant";
-            String password = "$ja3va!R3st5auran5t.926";
-            String database_name = "db_restaurant";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + database_name + "", user, password);
-
-            statement = connection.createStatement();
-            return statement;
-            //JOptionPane.showMessageDialog(null, "Database connected");
-        }
-        catch (Exception ex){
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
     private void displayDishTable(String query1, JPanel panel) throws SQLException {
         ResultSet result1 = statement.executeQuery(query1);
 
@@ -146,7 +127,6 @@ public final class addOrder extends javax.swing.JFrame{
                     if(Integer.parseInt(txtNumber.getText()) < Integer.parseInt(availibilty)){
                         count++;
                         id_dish_arrayD.add(id);
-                        JOptionPane.showMessageDialog(null, id_dish_arrayD);
 
                         txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())+1));
                         lblTotalOrder.setText("The total number of command is : " + count+".");
@@ -163,7 +143,7 @@ public final class addOrder extends javax.swing.JFrame{
                     if(Integer.parseInt(txtNumber.getText()) > 0){
                         count--;
                         id_dish_arrayD.remove(id_dish_arrayD.indexOf(id));
-                        JOptionPane.showMessageDialog(null, id_dish_arrayD);
+
                         txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())-1));
                         lblTotalOrder.setText("The total number of command is : " + count+".");
 
@@ -181,7 +161,7 @@ public final class addOrder extends javax.swing.JFrame{
 
     private void createUIComponents() {
         //connection database
-        statement = connection();
+        statement = MyJDBC.connection(statement);
 
         //Display table dish + elements in tabs
         try{
