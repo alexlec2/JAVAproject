@@ -72,7 +72,7 @@ public final class addOrder extends javax.swing.JFrame{
                 try{
                     String id_table_string = (String) tableComboBox.getSelectedItem();
                     int id_table = Integer.parseInt(String.valueOf(id_table_string.charAt(id_table_string.length()-1)));
-                    String queryAddOrder = "insert into db_restaurant.order (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', '2020-09-09 16:16:17');";
+                    String queryAddOrder = "insert into db_restaurant.order (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', now());";
 
                     statement.execute(queryAddOrder);
                     while(!id_dish_arrayD.isEmpty()){
@@ -146,6 +146,8 @@ public final class addOrder extends javax.swing.JFrame{
                     if(Integer.parseInt(txtNumber.getText()) < Integer.parseInt(availibilty)){
                         count++;
                         id_dish_arrayD.add(id);
+                        JOptionPane.showMessageDialog(null, id_dish_arrayD);
+
                         txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())+1));
                         lblTotalOrder.setText("The total number of command is : " + count+".");
 
@@ -160,7 +162,8 @@ public final class addOrder extends javax.swing.JFrame{
                 public void actionPerformed(ActionEvent e) {
                     if(Integer.parseInt(txtNumber.getText()) > 0){
                         count--;
-                        id_dish_arrayD.remove(id);
+                        id_dish_arrayD.remove(id_dish_arrayD.indexOf(id));
+                        JOptionPane.showMessageDialog(null, id_dish_arrayD);
                         txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())-1));
                         lblTotalOrder.setText("The total number of command is : " + count+".");
 
