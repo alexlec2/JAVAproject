@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 public class modifyOrderPage extends javax.swing.JFrame{
@@ -75,6 +76,9 @@ public class modifyOrderPage extends javax.swing.JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                count = 0;
+                id_dish_arrayD.clear();
+
                 while(tabbedPane2.getTabCount() > 0){
                     tabbedPane2.removeTabAt(0);
                 }
@@ -139,6 +143,8 @@ public class modifyOrderPage extends javax.swing.JFrame{
                     catch (Exception ex){
                         ex.printStackTrace();
                     }
+
+                    JOptionPane.showMessageDialog(null, id_dish_arrayD+" "+count);
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "empty field");
@@ -161,22 +167,14 @@ public class modifyOrderPage extends javax.swing.JFrame{
                         query = "Select id_order, id_table, status_order from `order` where id_order= "+idOrderTxt.getText()+";";
                     }
 
-
                     ResultSet result = statement.executeQuery(query);
-
-                    JOptionPane.showMessageDialog(null, query);
 
                     String id_order = "";
                     String id_table = "";
-                    String status_order = "";
 
                     while(result.next()){
-                        JOptionPane.showMessageDialog(null, result.getString(1)+" "+result.getString(2)+" "+result.getString(3));
-
                         id_order = result.getString(1);
                         id_table = result.getString(2);
-                        status_order = result.getString(3);
-
                     }
 
                     result.close();
@@ -184,17 +182,24 @@ public class modifyOrderPage extends javax.swing.JFrame{
                     String query3 = "Delete from ordered where id_order = "+id_order+";";
                     statement.execute(query3);
 
-                    while(!id_dish_arrayD.isEmpty()){
-                        int dish_ordered = id_dish_arrayD.get(0);
-                        int count_dish_ordered=0;
-                        while(id_dish_arrayD.contains(dish_ordered)){
-                            count_dish_ordered++;
-                            id_dish_arrayD.remove(id_dish_arrayD.indexOf(dish_ordered));
+                    int i = 0;
+                    Collections.sort(id_dish_arrayD);
+                    while(i < id_dish_arrayD.size()){
+
+                        int dish_ordered = id_dish_arrayD.get(i);
+                        int count_dish_ordered = 0;
+
+                        for (int j = i; j < id_dish_arrayD.size(); j++){
+                            if(dish_ordered == id_dish_arrayD.get(j)){
+                                count_dish_ordered++;
+                                i++;
+                            }
                         }
+
                         String queryAddOrdered = "insert into ordered values("+id_order+", "+dish_ordered+", "+count_dish_ordered+", "+id_table+", 'Ordered');";
-                        JOptionPane.showMessageDialog(null, queryAddOrdered);
                         statement.execute(queryAddOrdered);
                     }
+
                     statement.close();
                     JOptionPane.showMessageDialog(null, "Ordered table updated");
                 }
