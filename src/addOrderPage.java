@@ -26,7 +26,6 @@ public final class addOrderPage extends javax.swing.JFrame{
     int count = 0;
     double total_price = 0;
     Statement statement;
-    int[] id_dish_array = new int[100];
     ArrayList<Integer> id_dish_arrayD = new ArrayList<Integer>();
 
     DecimalFormat df = new DecimalFormat("#.##");
@@ -66,8 +65,7 @@ public final class addOrderPage extends javax.swing.JFrame{
                 try{
                     String id_table_string = (String) tableComboBox.getSelectedItem();
                     int id_table = Integer.parseInt(String.valueOf(id_table_string.charAt(id_table_string.length()-1)));
-                    String queryAddOrder = "insert into db_restaurant.order (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', now());";
-
+                    String queryAddOrder = "insert into order (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', now());";
                     statement.execute(queryAddOrder);
                     while(!id_dish_arrayD.isEmpty()){
                         int dish_ordered = id_dish_arrayD.get(0);
