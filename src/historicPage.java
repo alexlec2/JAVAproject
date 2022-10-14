@@ -33,8 +33,8 @@ public class historicPage extends javax.swing.JFrame{
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         statement = MyJDBC.connection(statement);
-        comboBox1.addItem("every table");
-        comboBox2.addItem("every user");
+        comboBox1.addItem("all table");
+        comboBox2.addItem("all user");
         comboBox3.addItem("Today");
         comboBox3.addItem("Last week");
         comboBox3.addItem("Last month");
