@@ -1,6 +1,7 @@
 import project.MyJDBC;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
@@ -14,8 +15,13 @@ public class historicPage extends javax.swing.JFrame{
     private JButton showButton;
     private JComboBox comboBox1;
     private JButton returnButton4;
+    private JComboBox comboBox2;
 
     Statement statement;
+
+    public static void main(String[] args) {
+        new historicPage(1);
+    }
 
     historicPage(int id_user){
         setContentPane(mainPanel);
@@ -24,6 +30,8 @@ public class historicPage extends javax.swing.JFrame{
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         statement = MyJDBC.connection(statement);
+        comboBox1.addItem("every table");
+        comboBox2.addItem("every user");
 
         try{
             ResultSet res_table = statement.executeQuery("select id_table from `table`;");
@@ -38,16 +46,59 @@ public class historicPage extends javax.swing.JFrame{
         }catch (SQLException ex){
             System.out.println(ex);
         }
+        try{
+            ResultSet res_user = statement.executeQuery("select id_user, username from user;");
+            ArrayList<String> list_username = new ArrayList<String>(100);
+            ArrayList<Integer> list_userID = new ArrayList<Integer>(100);
+            int i = 0;
+            while(res_user.next()){
+                list_userID.add(Integer.parseInt(res_user.getString("id_user")));
+                list_username.add(res_user.getString("username"));
+            }
+            for(int j=0; j<list_userID.size();j++){
+                comboBox2.addItem(list_userID.get(j)+": "+list_username.get(j));
+            }
+        }catch (SQLException ex){
+            System.out.println(ex);
+        }
+        ////////DESIGN//////
+        mainPanel.setBackground(new Color(209, 237, 242));
+        tabelPanel.setBackground(new Color(209, 237, 242));
+        comboBox1.setForeground(Color.BLUE);
+        comboBox2.setForeground(Color.BLUE);
+        ///////////////////
 
         setVisible(true);
         showButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String x = (String) comboBox1.getSelectedItem();
-                int index;
-                index = Integer.parseInt(String.valueOf(x.charAt(x.length()-1)));
+                String QUERY;
+                String x_table = (String) comboBox1.getSelectedItem();
+                String x_user = (String) comboBox2.getSelectedItem();
+                int index_table;
+                int index_user;
 
-                final String  QUERY = "select date_order, number, name, price, location from `order`, ordered, `table`, dish WHERE `order`.id_table=`table`.id_table and ordered.id_dish=dish.id_dish and `order`.status_order='ended' and `table`.id_table="+index+";";
+
+                if(x_user.charAt(x_user.length()-1)=='r'){
+                    if(x_table.charAt(x_table.length()-1)=='e'){
+                        QUERY = "select date_order, number, name, price, location from `order`, ordered, `table`, dish WHERE `order`.id_table=`table`.id_table and ordered.id_dish=dish.id_dish and `order`.status_order='ended';";
+                    }else {
+                        index_table= Integer.parseInt(String.valueOf(x_table.charAt(x_table.length()-1)));
+                        QUERY = "select date_order, number, name, price, location from `order`, ordered, `table`, dish WHERE `order`.id_table=`table`.id_table and ordered.id_dish=dish.id_dish and `order`.status_order='ended' and `table`.id_table="+index_table+";";
+                    }
+                }else {
+                    if(x_table.charAt(x_table.length()-1)=='e'){
+                        index_user = Integer.parseInt(String.valueOf(x_user.charAt(0)));
+                        QUERY="select date_order, number, name, price, location from `order`, ordered, `table`, dish, user WHERE `order`.id_table=`table`.id_table and ordered.id_dish=dish.id_dish and `order`.status_order='ended' and user.id_user="+index_user+";";
+                    }else {
+                        index_user = Integer.parseInt(String.valueOf(x_user.charAt(0)));
+                        index_table= Integer.parseInt(String.valueOf(x_table.charAt(x_table.length()-1)));
+                        QUERY="select date_order, number, name, price, location from `order`, ordered, `table`, dish, user WHERE `order`.id_table=`table`.id_table and ordered.id_dish=dish.id_dish and `order`.status_order='ended' and user.id_user="+index_user+" and `table`.id_table="+index_table+";";
+                    }
+                }
+
+
+
                 try{
                     ResultSet rs = statement.executeQuery(QUERY);
 
