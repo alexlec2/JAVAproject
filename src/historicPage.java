@@ -17,6 +17,8 @@ public class historicPage extends javax.swing.JFrame{
     private JButton returnButton4;
     private JComboBox comboBox2;
     private JButton showBestDishButton;
+    private JButton showCommandOfButton;
+    private JComboBox comboBox3;
 
     Statement statement;
 
@@ -33,6 +35,10 @@ public class historicPage extends javax.swing.JFrame{
         statement = MyJDBC.connection(statement);
         comboBox1.addItem("every table");
         comboBox2.addItem("every user");
+        comboBox3.addItem("Today");
+        comboBox3.addItem("Last week");
+        comboBox3.addItem("Last month");
+        comboBox3.addItem("Last year");
 
         try{
             ResultSet res_table = statement.executeQuery("select id_table from `table`;");
@@ -70,6 +76,14 @@ public class historicPage extends javax.swing.JFrame{
         ///////////////////
 
         setVisible(true);
+        showCommandOfButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String x_time = (String) comboBox3.getSelectedItem();
+                String time_Now = String.valueOf(java.time.LocalDate.now());
+                System.out.println(time_Now);
+            }
+        });
         showBestDishButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
