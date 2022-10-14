@@ -196,11 +196,7 @@ public final class addOrderPage extends javax.swing.JFrame{
             drinkPanel.setLayout(new BoxLayout(drinkPanel, BoxLayout.Y_AXIS));
             displayDishTable(query4, drinkPanel);
 
-
             toOrderButton = new JButton("To order");
-
-
-
         }
         catch (Exception e){
             e.printStackTrace();
