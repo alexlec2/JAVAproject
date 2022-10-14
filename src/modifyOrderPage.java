@@ -4,35 +4,35 @@ import java.awt.event.ActionListener;
 
 public class modifyOrderPage extends javax.swing.JFrame{
 
-    private JPanel modifyMainPanel;
+    private JPanel mainModifyPanel;
     private JButton returnButton5;
     private JButton historicButton2;
     private JPanel inputPanel2;
-    private JPanel searchedPanel;
-    private JPanel modifyPanel;
-    private JPanel modifyTablePanel;
-    private JPanel modifyButtonPanel;
-    private JButton updateButton;
-    private JPanel panelTabs;
-    private JTabbedPane tabbedPane1;
-    private JPanel appetizerPanel;
-    private JPanel dishPanel;
-    private JPanel dessertPanel;
-    private JPanel drinkPanel;
     private JButton searchButton;
     private JButton modifyButton;
     private JTextField textField1;
     private JPanel inputPanel1;
+    private JButton updateButton;
+    private JPanel displayDataPanel;
+    private JTabbedPane tabbedPane2;
+    private JPanel appetizer2Panel;
+    private JPanel dish2Panel;
+    private JPanel dessert2Panel;
+    private JPanel drink2Panel;
+    private JPanel modifyPanel;
+    private JPanel buttonUpdatePanel;
+    private JPanel searchPanel;
 
     public static void main(String[] args) {
         new modifyOrderPage(1);
     }
 
     modifyOrderPage(int id_user){
-        setContentPane(modifyMainPanel);
+        setContentPane(mainModifyPanel);
         setTitle("Java Project Modify order page");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setVisible(true);
 
         returnButton5.addActionListener(new ActionListener() {
             @Override
@@ -48,27 +48,28 @@ public class modifyOrderPage extends javax.swing.JFrame{
                 dispose();
             }
         });
+
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                searchedPanel.setVisible(true);
-                modifyPanel.setVisible(false);
+                searchPanel.setVisible(true);
+                displayDataPanel.setVisible(false);
             }
         });
         modifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                modifyPanel.setVisible(true);
-                searchedPanel.setVisible(false);
+                displayDataPanel.setVisible(true);
+                searchPanel.setVisible(false);
             }
         });
     }
 
     private void createUIComponents(){
-        searchedPanel = new JPanel();
-        searchedPanel.setVisible(false);
+        searchPanel = new JPanel();
+        searchPanel.setVisible(false);
 
-        modifyPanel = new JPanel();
-        modifyPanel.setVisible(false);
+        displayDataPanel = new JPanel();
+        displayDataPanel.setVisible(false);
     }
 }
