@@ -38,8 +38,11 @@ create table ordered(
 id_order int,
 id_dish int,
 number int,
+id_table int,
+status_order varchar(50),
 foreign key(id_order) references `order`(id_order),
-foreign key(id_dish) references dish(id_dish)
+foreign key(id_dish) references dish(id_dish),
+foreign key(id_table) references `order`(id_table)
 );
 
 insert into `user`(username, password, type) values("root", "root", "Big Boss");

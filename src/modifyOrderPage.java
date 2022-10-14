@@ -30,6 +30,8 @@ public class modifyOrderPage extends javax.swing.JFrame{
     private JPanel modifyPanel;
     private JPanel buttonUpdatePanel;
     private JPanel searchPanel;
+    private JButton deleteButton;
+    private JComboBox idComboBox;
     Statement statement;
     Statement statement2;
     int count = 0;
@@ -66,35 +68,43 @@ public class modifyOrderPage extends javax.swing.JFrame{
             public void actionPerformed(ActionEvent e) {
                 searchPanel.setVisible(true);
                 displayDataPanel.setVisible(false);
+
             }
         });
         modifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                while(tabbedPane2.getTabCount() > 0){
+                    tabbedPane2.removeTabAt(0);
+                }
+
                 if(!idOrderTxt.getText().isEmpty()){
                     displayDataPanel.setVisible(true);
                     searchPanel.setVisible(false);
 
                     try{
+                        int id_number = Integer.parseInt(idOrderTxt.getText());
+                        String tableSelected = (String) idComboBox.getSelectedItem();
+
                         appetizer2Panel = new JPanel();
                         appetizer2Panel.setLayout(new BoxLayout(appetizer2Panel, BoxLayout.Y_AXIS));
-                        displayDishTableFromOrder("Appetizer", appetizer2Panel, Integer.parseInt(idOrderTxt.getText()));
+                        displayDishTableFromOrder("Appetizer", appetizer2Panel, id_number, tableSelected);
                         tabbedPane2.addTab("Appetizer", appetizer2Panel);
 
                         dish2Panel = new JPanel();
                         dish2Panel.setLayout(new BoxLayout(dish2Panel, BoxLayout.Y_AXIS));
-                        displayDishTableFromOrder("Dishes", dish2Panel, Integer.parseInt(idOrderTxt.getText()));
+                        displayDishTableFromOrder("Dishes", dish2Panel, id_number, tableSelected);
                         tabbedPane2.addTab("Dish", dish2Panel);
 
                         dessert2Panel = new JPanel();
                         dessert2Panel.setLayout(new BoxLayout(dessert2Panel, BoxLayout.Y_AXIS));
-                        displayDishTableFromOrder("Dessert", dessert2Panel, Integer.parseInt(idOrderTxt.getText()));
+                        displayDishTableFromOrder("Dessert", dessert2Panel, id_number, tableSelected);
                         tabbedPane2.addTab("Dessert", dessert2Panel);
 
                         drink2Panel = new JPanel();
                         drink2Panel.setLayout(new BoxLayout(drink2Panel, BoxLayout.Y_AXIS));
-                        displayDishTableFromOrder("Drink", drink2Panel, Integer.parseInt(idOrderTxt.getText()));
+                        displayDishTableFromOrder("Drink", drink2Panel, id_number, tableSelected);
                         tabbedPane2.addTab("Drink", drink2Panel);
 
                     }
@@ -110,23 +120,40 @@ public class modifyOrderPage extends javax.swing.JFrame{
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                statement = MyJDBC.connection(statement);
+
 
                 try{
-                    /*
-                    String query1 = "Select *  from order where id_order="+idOrderTxt.getText()+";";
-                    ResultSet result1 = statement.executeQuery(query1);
-                    String id_table = result1.getString(2);
-                    String id_user = result1.getString(3);
-                    String status_order = result1.getString(4);
-                    String date_order = result1.getString(5);
-                    JOptionPane.showMessageDialog(null, date_order);
-                    result1.close();
+                    statement = MyJDBC.connection(statement);
+                    String query = "";
 
-                    String query2 = "Delete from order where id_order = "+idOrderTxt.getText()+";";
-                    statement.execute(query2);
-*/
-                    String query3 = "Delete from ordered where id_order = "+idOrderTxt.getText()+";";
+                    if(idComboBox.getSelectedItem() == "Table"){
+                        query = "Select id_order, id_table, status_order from `order` where id_table= "+idOrderTxt.getText()+" and status_order != 'Ended';";
+                    }
+                    else{
+                        query = "Select id_order, id_table, status_order from `order` where id_order= "+idOrderTxt.getText()+";";
+                    }
+
+
+                    ResultSet result = statement.executeQuery(query);
+
+                    JOptionPane.showMessageDialog(null, query);
+
+                    String id_order = "";
+                    String id_table = "";
+                    String status_order = "";
+
+                    while(result.next()){
+                        JOptionPane.showMessageDialog(null, result.getString(1)+" "+result.getString(2)+" "+result.getString(3));
+
+                        id_order = result.getString(1);
+                        id_table = result.getString(2);
+                        status_order = result.getString(3);
+
+                    }
+
+                    result.close();
+
+                    String query3 = "Delete from ordered where id_order = "+id_order+";";
                     statement.execute(query3);
 
                     while(!id_dish_arrayD.isEmpty()){
@@ -136,33 +163,66 @@ public class modifyOrderPage extends javax.swing.JFrame{
                             count_dish_ordered++;
                             id_dish_arrayD.remove(id_dish_arrayD.indexOf(dish_ordered));
                         }
-                        String queryAddOrdered = "insert into ordered values("+idOrderTxt.getText()+", "+dish_ordered+", "+count_dish_ordered+");";
+                        String queryAddOrdered = "insert into ordered values("+id_order+", "+dish_ordered+", "+count_dish_ordered+", "+id_table+", 'Ordered');";
+                        JOptionPane.showMessageDialog(null, queryAddOrdered);
                         statement.execute(queryAddOrdered);
                     }
                     statement.close();
-
-
+                    JOptionPane.showMessageDialog(null, "Ordered table updated");
                 }
                 catch (Exception ex){
                     ex.printStackTrace();
                 }
+            }
+        });
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+                try{
+                statement = MyJDBC.connection(statement);
 
+                String query1 = "Delete from ordered where id_order="+Integer.parseInt(idOrderTxt.getText())+";";
+                String query2 = "Delete from `order` where id_order="+Integer.parseInt(idOrderTxt.getText())+";";
+
+                statement.execute(query1);
+                statement.execute(query2);
+
+                statement.close();
+                JOptionPane.showMessageDialog(null, "Delete from order and ordered tables");
+                }
+                catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }
         });
     }
 
-
-    private void displayDishTableFromOrder(String type, JPanel panel, int idOrder) throws SQLException {
+    private void displayDishTableFromOrder(String type, JPanel panel, int idNumber, String tableSelected) throws SQLException {
         boolean closed = false;
+        boolean equal = true;
 
         statement = MyJDBC.connection(statement);
         statement2 = MyJDBC.connection(statement2);
 
-        String query = "Select * from dish where type='"+type+"';";
-        ResultSet result1 = statement.executeQuery(query);
-        ResultSet result2 = statement2.executeQuery("SELECT dish.id_dish, dish.name, ordered.number FROM dish inner join ordered " +
-                "on dish.id_dish = ordered.id_dish and ordered.id_order = "+idOrder+" and dish.type='"+type+"';");
+        String query1 = "Select * from dish where type='"+type+"';";
+        String query2 = "";
+        if(Objects.equals(tableSelected, "Order")){
+            query2 = "SELECT dish.id_dish, dish.name, ordered.number FROM dish inner join ordered " +
+                    "on dish.id_dish = ordered.id_dish and ordered.id_order = "+idNumber+" and dish.type='"+type+"';";
+        }
+        else {
+            query2 = "SELECT dish.id_dish, dish.name, ordered.number FROM dish inner join ordered " +
+                    "on dish.id_dish = ordered.id_dish and dish.type='"+type+"'" +
+                    "inner join `order` on  ordered.id_table = "+idNumber+" and `order`.id_order=ordered.id_order and `order`.status_order != 'Ended';";
+        }
+
+        ResultSet result1 = statement.executeQuery(query1);
+        ResultSet result2 = statement2.executeQuery(query2);
+
+        String id_dish2 = "";
+        String dish_name2 = "";
+        String number2 = "";
 
         while (result1.next()){
             JPanel panelTemp = new JPanel();
@@ -175,20 +235,45 @@ public class modifyOrderPage extends javax.swing.JFrame{
             panelTemp.add(txtNumber = new JTextField("0", 2));
 
             if(!closed){
-                if(result2.next()){
-                    if(Objects.equals(result1.getString(1), result2.getString(1))){
-                        txtNumber.setText(result2.getString(3));
-                        count += Integer.parseInt(result2.getString(3));
-                        for(int i = 0; i < Integer.parseInt(result2.getString(3)); i++){
-                            id_dish_arrayD.add(Integer.parseInt(result2.getString(1)));
+                if(equal){
+                    if(result2.next()){
+                        id_dish2 = result2.getString(1);
+                        dish_name2 = result2.getString(2);
+                        number2 = result2.getString(3);
+
+                        if(Objects.equals(result1.getString(1), id_dish2)){
+                            txtNumber.setText(number2);
+                            count += Integer.parseInt(number2);
+                            for(int i = 0; i < Integer.parseInt(number2); i++){
+                                id_dish_arrayD.add(Integer.parseInt(id_dish2));
+                            }
+                            equal = true;
+                        }
+                        else{
+                            equal = false;
                         }
                     }
+                    else {
+                        result2.close();
+                        statement2.close();
+                        closed = true;
+                    }
                 }
-                else {
-                    result2.close();
-                    statement2.close();
-                    closed = true;
+                else{
+                    if(Objects.equals(result1.getString(1), id_dish2)){
+                        txtNumber.setText(number2);
+                        count += Integer.parseInt(number2);
+                        for(int i = 0; i < Integer.parseInt(number2); i++){
+                            id_dish_arrayD.add(Integer.parseInt(id_dish2));
+                        }
+                        equal = true;
+                    }
+                    else{
+                        equal = false;
+                    }
                 }
+
+
             }
 
 
@@ -236,13 +321,14 @@ public class modifyOrderPage extends javax.swing.JFrame{
         }
     }
 
-
-
     private void createUIComponents(){
         searchPanel = new JPanel();
         searchPanel.setVisible(false);
 
         displayDataPanel = new JPanel();
         displayDataPanel.setVisible(false);
+
+        String[] data = { "Table", "Order"};
+        idComboBox = new JComboBox(data);
     }
 }

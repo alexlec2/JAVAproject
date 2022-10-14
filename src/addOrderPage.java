@@ -65,7 +65,7 @@ public final class addOrderPage extends javax.swing.JFrame{
                 try{
                     String id_table_string = (String) tableComboBox.getSelectedItem();
                     int id_table = Integer.parseInt(String.valueOf(id_table_string.charAt(id_table_string.length()-1)));
-                    String queryAddOrder = "insert into order (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', now());";
+                    String queryAddOrder = "insert into `order` (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', now());";
                     statement.execute(queryAddOrder);
                     while(!id_dish_arrayD.isEmpty()){
                         int dish_ordered = id_dish_arrayD.get(0);
@@ -74,11 +74,12 @@ public final class addOrderPage extends javax.swing.JFrame{
                             count_dish_ordered++;
                             id_dish_arrayD.remove(id_dish_arrayD.indexOf(dish_ordered));
                         }
-                        String queryAddOrdered = "insert into ordered values(LAST_INSERT_ID(), "+dish_ordered+", "+count_dish_ordered+");";
+                        String queryAddOrdered = "insert into ordered values(LAST_INSERT_ID(), "+dish_ordered+", "+count_dish_ordered+", "+id_table+", 'Ordered');";
                         statement.execute(queryAddOrdered);
                     }
                     JOptionPane.showMessageDialog(null, "Added to the database!");
-
+                    count = 0;
+                    id_dish_arrayD.clear();
                 }
                 catch (SQLException sqlException){
                     JOptionPane.showMessageDialog(null, sqlException);
