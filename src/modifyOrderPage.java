@@ -33,33 +33,46 @@ public class modifyOrderPage extends javax.swing.JFrame{
     private JPanel searchPanel;
     private JButton deleteButton;
     private JComboBox idComboBox;
+    private JButton settingButton;
     Statement statement;
     Statement statement2;
     int count = 0;
     ArrayList<Integer> id_dish_arrayD = new ArrayList<Integer>();
 
     public static void main(String[] args) {
-        new modifyOrderPage(1);
+        new modifyOrderPage(1, "Admin");
     }
 
-    modifyOrderPage(int id_user){
+    modifyOrderPage(int id_user, String type){
         setContentPane(mainModifyPanel);
         setTitle("Java Project Modify order page");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
+        if(!Objects.equals(type, "Admin")){
+            settingButton.setVisible(false);
+        }
+
+        settingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new adminPage(id_user, type);
+                dispose();
+            }
+        });
+
         returnButton5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new mainInterfacePage(id_user);
+                new mainInterfacePage(id_user, type);
                 dispose();
             }
         });
         historicButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new historicPage(id_user);
+                new historicPage(id_user, type);
                 dispose();
             }
         });
@@ -125,10 +138,10 @@ public class modifyOrderPage extends javax.swing.JFrame{
                         Drink2Panel.setName("Drink");
                         Drink2Panel.setLayout(new BoxLayout(Drink2Panel, BoxLayout.Y_AXIS));
 
-                        displayDishTableFromOrder(result1, result2, Appetizer2Panel);
-                        displayDishTableFromOrder(result1, result2, Dishes2Panel);
-                        displayDishTableFromOrder(result1, result2, Dessert2Panel);
-                        displayDishTableFromOrder(result1, result2, Drink2Panel);
+                        displayDishTableFromOrder(result1, result2);
+                        displayDishTableFromOrder(result1, result2);
+                        displayDishTableFromOrder(result1, result2);
+                        displayDishTableFromOrder(result1, result2);
 
                         tabbedPane2.addTab("Appetizer", Appetizer2Panel);
                         tabbedPane2.addTab("Dish", Dishes2Panel);
@@ -229,7 +242,7 @@ public class modifyOrderPage extends javax.swing.JFrame{
         });
     }
 
-    private void displayDishTableFromOrder(ResultSet result1, ResultSet result2, JPanel panel) throws SQLException {
+    private void displayDishTableFromOrder(ResultSet result1, ResultSet result2) throws SQLException {
         boolean equal = true;
 
         String id_dish2 = "";

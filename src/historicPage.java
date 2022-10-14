@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.swing.table.DefaultTableModel;
 
 public class historicPage extends javax.swing.JFrame{
@@ -19,14 +20,15 @@ public class historicPage extends javax.swing.JFrame{
     private JButton showBestDishButton;
     private JButton showCommandOfButton;
     private JComboBox comboBox3;
+    private JButton settingButton;
 
     Statement statement;
 
     public static void main(String[] args) {
-        new historicPage(1);
+        new historicPage(1, "Admin");
     }
 
-    historicPage(int id_user){
+    historicPage(int id_user, String type){
         setContentPane(mainPanel);
         setTitle("Java Project Historic page");
         setSize(400,800);
@@ -169,7 +171,19 @@ public class historicPage extends javax.swing.JFrame{
         returnButton4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new mainInterfacePage(id_user);
+                new mainInterfacePage(id_user, type);
+                dispose();
+            }
+        });
+
+        if(!Objects.equals(type, "Admin")){
+            settingButton.setVisible(false);
+        }
+
+        settingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new adminPage(id_user, type);
                 dispose();
             }
         });
