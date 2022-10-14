@@ -79,9 +79,34 @@ public class historicPage extends javax.swing.JFrame{
         showCommandOfButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String QUERY="";
                 String x_time = (String) comboBox3.getSelectedItem();
-                String time_Now = String.valueOf(java.time.LocalDate.now());
-                System.out.println(time_Now);
+                String time_last_day = String.valueOf(java.time.LocalDate.now().minusDays(1));
+                String time_last_week = String.valueOf(java.time.LocalDate.now().minusWeeks(1));
+                String time_last_month = String.valueOf(java.time.LocalDate.now().minusMonths(1));
+                String time_last_year = String.valueOf(java.time.LocalDate.now().minusYears(1));
+                if(x_time.equals("Today")){
+                    QUERY = "select date_order, name, number from `order`, dish, ordered WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' and date_order>'"+time_last_day+"';";
+                }
+                if(x_time.equals("Last week")){
+                    QUERY = "select date_order, name, number from `order`, dish, ordered WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' and date_order>'"+time_last_week+"';";
+                }
+                if(x_time.equals("Last month")){
+                    QUERY = "select date_order, name, number from `order`, dish, ordered WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' and date_order>'"+time_last_month+"';";
+                }
+                if(x_time.equals("Last year")){
+                    QUERY = "select date_order, name, number from `order`, dish, ordered WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' and date_order>'"+time_last_year+"';";
+                }
+                try{
+                    ResultSet rs = statement.executeQuery(QUERY);
+
+                    resultSetToTableModel(rs, historicTable);
+                    //Description.setModel(DbUtils.resultSetToTableModel(rs));
+
+                }catch(SQLException ex){
+                    System.out.println(ex);
+                }
+
             }
         });
         showBestDishButton.addActionListener(new ActionListener() {
