@@ -23,10 +23,10 @@ public class modifyOrderPage extends javax.swing.JFrame{
     private JButton updateButton;
     private JPanel displayDataPanel;
     private JTabbedPane tabbedPane2;
-    private JPanel appetizer2Panel;
-    private JPanel dish2Panel;
-    private JPanel dessert2Panel;
-    private JPanel drink2Panel;
+    private JPanel Appetizer2Panel;
+    private JPanel Dishes2Panel;
+    private JPanel Dessert2Panel;
+    private JPanel Drink2Panel;
     private JPanel modifyPanel;
     private JPanel buttonUpdatePanel;
     private JPanel searchPanel;
@@ -87,26 +87,54 @@ public class modifyOrderPage extends javax.swing.JFrame{
                         int id_number = Integer.parseInt(idOrderTxt.getText());
                         String tableSelected = (String) idComboBox.getSelectedItem();
 
-                        appetizer2Panel = new JPanel();
-                        appetizer2Panel.setLayout(new BoxLayout(appetizer2Panel, BoxLayout.Y_AXIS));
-                        displayDishTableFromOrder("Appetizer", appetizer2Panel, id_number, tableSelected);
-                        tabbedPane2.addTab("Appetizer", appetizer2Panel);
+                        statement = MyJDBC.connection(statement);
+                        statement2 = MyJDBC.connection(statement2);
 
-                        dish2Panel = new JPanel();
-                        dish2Panel.setLayout(new BoxLayout(dish2Panel, BoxLayout.Y_AXIS));
-                        displayDishTableFromOrder("Dishes", dish2Panel, id_number, tableSelected);
-                        tabbedPane2.addTab("Dish", dish2Panel);
+                        String query1 = "Select * from dish;";
+                        String query2 = "";
+                        if(Objects.equals(tableSelected, "Order")){
+                            query2 = "SELECT dish.id_dish, dish.name, ordered.number, dish.type FROM dish inner join ordered " +
+                                    "on dish.id_dish = ordered.id_dish and ordered.id_order = "+id_number+";";
+                        }
+                        else {
+                            query2 = "SELECT dish.id_dish, dish.name, ordered.number, dish.type FROM dish inner join ordered " +
+                                    "on dish.id_dish = ordered.id_dish "+
+                                    "inner join `order` on  ordered.id_table = "+id_number+" and `order`.id_order=ordered.id_order and `order`.status_order != 'Ended';";
+                        }
 
-                        dessert2Panel = new JPanel();
-                        dessert2Panel.setLayout(new BoxLayout(dessert2Panel, BoxLayout.Y_AXIS));
-                        displayDishTableFromOrder("Dessert", dessert2Panel, id_number, tableSelected);
-                        tabbedPane2.addTab("Dessert", dessert2Panel);
+                        ResultSet result1 = statement.executeQuery(query1);
+                        ResultSet result2 = statement2.executeQuery(query2);
 
-                        drink2Panel = new JPanel();
-                        drink2Panel.setLayout(new BoxLayout(drink2Panel, BoxLayout.Y_AXIS));
-                        displayDishTableFromOrder("Drink", drink2Panel, id_number, tableSelected);
-                        tabbedPane2.addTab("Drink", drink2Panel);
+                        Appetizer2Panel = new JPanel();
+                        Appetizer2Panel.setName("Appetizer");
+                        Appetizer2Panel.setLayout(new BoxLayout(Appetizer2Panel, BoxLayout.Y_AXIS));
 
+                        Dishes2Panel = new JPanel();
+                        Dishes2Panel.setName("Dishes");
+                        Dishes2Panel.setLayout(new BoxLayout(Dishes2Panel, BoxLayout.Y_AXIS));
+
+                        Dessert2Panel = new JPanel();
+                        Dessert2Panel.setName("Dessert");
+                        Dessert2Panel.setLayout(new BoxLayout(Dessert2Panel, BoxLayout.Y_AXIS));
+
+                        Drink2Panel = new JPanel();
+                        Drink2Panel.setName("Drink");
+                        Drink2Panel.setLayout(new BoxLayout(Drink2Panel, BoxLayout.Y_AXIS));
+
+                        displayDishTableFromOrder(result1, result2, Appetizer2Panel);
+                        displayDishTableFromOrder(result1, result2, Dishes2Panel);
+                        displayDishTableFromOrder(result1, result2, Dessert2Panel);
+                        displayDishTableFromOrder(result1, result2, Drink2Panel);
+
+                        tabbedPane2.addTab("Appetizer", Appetizer2Panel);
+                        tabbedPane2.addTab("Dish", Dishes2Panel);
+                        tabbedPane2.addTab("Dessert", Dessert2Panel);
+                        tabbedPane2.addTab("Drink", Drink2Panel);
+
+                        result1.close();
+                        result2.close();
+                        statement.close();
+                        statement2.close();
                     }
                     catch (Exception ex){
                         ex.printStackTrace();
@@ -198,30 +226,10 @@ public class modifyOrderPage extends javax.swing.JFrame{
         });
     }
 
-    private void displayDishTableFromOrder(String type, JPanel panel, int idNumber, String tableSelected) throws SQLException {
-        boolean closed = false;
+    private void displayDishTableFromOrder(ResultSet result1, ResultSet result2, JPanel panel) throws SQLException {
         boolean equal = true;
 
-        statement = MyJDBC.connection(statement);
-        statement2 = MyJDBC.connection(statement2);
-
-        String query1 = "Select * from dish where type='"+type+"';";
-        String query2 = "";
-        if(Objects.equals(tableSelected, "Order")){
-            query2 = "SELECT dish.id_dish, dish.name, ordered.number FROM dish inner join ordered " +
-                    "on dish.id_dish = ordered.id_dish and ordered.id_order = "+idNumber+" and dish.type='"+type+"';";
-        }
-        else {
-            query2 = "SELECT dish.id_dish, dish.name, ordered.number FROM dish inner join ordered " +
-                    "on dish.id_dish = ordered.id_dish and dish.type='"+type+"'" +
-                    "inner join `order` on  ordered.id_table = "+idNumber+" and `order`.id_order=ordered.id_order and `order`.status_order != 'Ended';";
-        }
-
-        ResultSet result1 = statement.executeQuery(query1);
-        ResultSet result2 = statement2.executeQuery(query2);
-
         String id_dish2 = "";
-        String dish_name2 = "";
         String number2 = "";
 
         while (result1.next()){
@@ -230,52 +238,38 @@ public class modifyOrderPage extends javax.swing.JFrame{
             panelTemp.add(new JLabel(result1.getString(2)));
             panelTemp.add(id_dish = new JLabel(result1.getString(1)));
             id_dish.setVisible(false);
-            panelTemp.add(new JLabel("(Restant: "+result1.getString(5)+")"));
+            panelTemp.add(new JLabel("(Restant: " + result1.getString(5) + ")"));
             JTextField txtNumber;
             panelTemp.add(txtNumber = new JTextField("0", 2));
 
-            if(!closed){
-                if(equal){
-                    if(result2.next()){
-                        id_dish2 = result2.getString(1);
-                        dish_name2 = result2.getString(2);
-                        number2 = result2.getString(3);
+            if (equal) {
+                if (result2.next()) {
+                    id_dish2 = result2.getString(1);
+                    number2 = result2.getString(3);
 
-                        if(Objects.equals(result1.getString(1), id_dish2)){
-                            txtNumber.setText(number2);
-                            count += Integer.parseInt(number2);
-                            for(int i = 0; i < Integer.parseInt(number2); i++){
-                                id_dish_arrayD.add(Integer.parseInt(id_dish2));
-                            }
-                            equal = true;
-                        }
-                        else{
-                            equal = false;
-                        }
-                    }
-                    else {
-                        result2.close();
-                        statement2.close();
-                        closed = true;
-                    }
-                }
-                else{
-                    if(Objects.equals(result1.getString(1), id_dish2)){
+                    if (Objects.equals(result1.getString(1), id_dish2)) {
                         txtNumber.setText(number2);
                         count += Integer.parseInt(number2);
-                        for(int i = 0; i < Integer.parseInt(number2); i++){
+                        for (int i = 0; i < Integer.parseInt(number2); i++) {
                             id_dish_arrayD.add(Integer.parseInt(id_dish2));
                         }
                         equal = true;
-                    }
-                    else{
+                    } else {
                         equal = false;
                     }
                 }
-
-
+            } else {
+                if (Objects.equals(result1.getString(1), id_dish2)) {
+                    txtNumber.setText(number2);
+                    count += Integer.parseInt(number2);
+                    for (int i = 0; i < Integer.parseInt(number2); i++) {
+                        id_dish_arrayD.add(Integer.parseInt(id_dish2));
+                    }
+                    equal = true;
+                } else {
+                    equal = false;
+                }
             }
-
 
 
             txtNumber.setEditable(false);
@@ -293,31 +287,38 @@ public class modifyOrderPage extends javax.swing.JFrame{
             plus.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(Integer.parseInt(txtNumber.getText()) < Integer.parseInt(availibilty)){
+                    if (Integer.parseInt(txtNumber.getText()) < Integer.parseInt(availibilty)) {
                         count++;
                         id_dish_arrayD.add(id);
-                        txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())+1));
+                        txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText()) + 1));
                     }
                 }
             });
             minus.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(Integer.parseInt(txtNumber.getText()) > 0){
+                    if (Integer.parseInt(txtNumber.getText()) > 0) {
                         count--;
                         id_dish_arrayD.remove(id_dish_arrayD.indexOf(id));
-                        txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText())-1));
+                        txtNumber.setText(String.valueOf(Integer.parseInt(txtNumber.getText()) - 1));
                     }
                 }
             });
 
-            panel.add(panelTemp);
-        }
-        result1.close();
-        statement.close();
-        if(!closed){
-            result2.close();
-            statement2.close();
+            String name = result1.getString(4);
+
+            if(name.equals(Appetizer2Panel.getName())){
+                Appetizer2Panel.add(panelTemp);
+            }
+            else if(name.equals(Dishes2Panel.getName())){
+                Dishes2Panel.add(panelTemp);
+            }
+            else if(name.equals(Dessert2Panel.getName())){
+                Dessert2Panel.add(panelTemp);
+            }
+            else if(name.equals(Drink2Panel.getName())){
+                Drink2Panel.add(panelTemp);
+            }
         }
     }
 
