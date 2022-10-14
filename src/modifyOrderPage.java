@@ -143,8 +143,6 @@ public class modifyOrderPage extends javax.swing.JFrame{
                     catch (Exception ex){
                         ex.printStackTrace();
                     }
-
-                    JOptionPane.showMessageDialog(null, id_dish_arrayD+" "+count);
                 }
                 else{
                     JOptionPane.showMessageDialog(null, "empty field");
