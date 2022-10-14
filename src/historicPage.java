@@ -16,6 +16,7 @@ public class historicPage extends javax.swing.JFrame{
     private JComboBox comboBox1;
     private JButton returnButton4;
     private JComboBox comboBox2;
+    private JButton showBestDishButton;
 
     Statement statement;
 
@@ -69,6 +70,21 @@ public class historicPage extends javax.swing.JFrame{
         ///////////////////
 
         setVisible(true);
+        showBestDishButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String QUERY = "SELECT dish.id_dish, dish.name, SUM(ordered.number) AS total_number FROM ordered, dish, `order` WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' GROUP BY id_dish ORDER BY total_number DESC;";
+                try{
+                    ResultSet rs = statement.executeQuery(QUERY);
+
+                    resultSetToTableModel(rs, historicTable);
+                    //Description.setModel(DbUtils.resultSetToTableModel(rs));
+
+                }catch(SQLException ex){
+                    System.out.println(ex);
+                }
+            }
+        });
         showButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
