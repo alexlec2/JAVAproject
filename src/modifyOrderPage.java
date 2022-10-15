@@ -17,8 +17,7 @@ public class modifyOrderPage extends javax.swing.JFrame{
     private JButton returnButton5;
     private JButton historicButton2;
     private JPanel inputPanel2;
-    private JButton searchButton;
-    private JButton modifyButton;
+    private JButton searchModifyButton;
     private JTextField idOrderTxt;
     private JPanel inputPanel1;
     private JButton updateButton;
@@ -34,6 +33,10 @@ public class modifyOrderPage extends javax.swing.JFrame{
     private JButton deleteButton;
     private JComboBox idComboBox;
     private JButton settingButton;
+    private JComboBox comboBox2;
+    private JButton applyButton;
+    private JTextField textIdOrderTable;
+    private JComboBox comboBox1;
     Statement statement;
     Statement statement2;
     int count = 0;
@@ -77,15 +80,7 @@ public class modifyOrderPage extends javax.swing.JFrame{
             }
         });
 
-        searchButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                searchPanel.setVisible(true);
-                displayDataPanel.setVisible(false);
-
-            }
-        });
-        modifyButton.addActionListener(new ActionListener() {
+        searchModifyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -253,6 +248,31 @@ public class modifyOrderPage extends javax.swing.JFrame{
                 }
             }
         });
+        applyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    statement = MyJDBC.connection(statement);
+
+                    String query1 = "SET FOREIGN_KEY_CHECKS = 0;";
+                    String queryUpdate2 = "update `ordered` set id_table="+comboBox1.getSelectedItem()+" where id_order="+textIdOrderTable.getText()+";";
+                    String queryUpdate = "update `order` set id_table="+comboBox1.getSelectedItem()+" where id_order="+textIdOrderTable.getText()+";";
+                    String query2 = "SET FOREIGN_KEY_CHECKS = 1;";
+
+                    statement.execute(query1);
+                    statement.execute(queryUpdate2);
+                    statement.execute(queryUpdate);
+                    statement.execute(query2);
+
+                    statement.close();
+
+                    JOptionPane.showMessageDialog(null, "Update performed !");
+                }
+                catch (SQLException es){
+                    System.out.println(es);
+                }
+            }
+        });
     }
 
     private void displayDishTableFromOrder(ResultSet result1, ResultSet result2) throws SQLException {
@@ -360,5 +380,23 @@ public class modifyOrderPage extends javax.swing.JFrame{
 
         String[] data = { "Table", "Order"};
         idComboBox = new JComboBox(data);
+
+        try{
+            statement = MyJDBC.connection(statement);
+
+            comboBox1 = new JComboBox();
+            ResultSet res_table = statement.executeQuery("select id_table from `table`;");
+            ArrayList<Integer> list_table = new ArrayList<Integer>(100);
+            while(res_table.next()){
+                list_table.add(Integer.parseInt(res_table.getString("id_table")));
+            }
+            for(int j=0; j<list_table.size();j++){
+                comboBox1.addItem(list_table.get(j));
+            }
+
+            statement.close();
+        }catch (SQLException exx){
+            System.out.println(exx);
+        }
     }
 }
