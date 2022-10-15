@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 import project.MyJDBC;
@@ -85,21 +86,42 @@ public final class addOrderPage extends javax.swing.JFrame{
                     int id_table = Integer.parseInt(String.valueOf(id_table_string.charAt(id_table_string.length()-1)));
                     String queryAddOrder = "insert into `order` (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', now());";
                     statement.execute(queryAddOrder);
-                    while(!id_dish_arrayD.isEmpty()){
-                        int dish_ordered = id_dish_arrayD.get(0);
+
+                    int i = 0;
+                    Collections.sort(id_dish_arrayD);
+                    while(i < id_dish_arrayD.size()){
+                        int dish_ordered = id_dish_arrayD.get(i);
                         int count_dish_ordered=0;
-                        while(id_dish_arrayD.contains(dish_ordered)){
-                            count_dish_ordered++;
-                            id_dish_arrayD.remove(id_dish_arrayD.indexOf(dish_ordered));
+                        for (int j = i; j < id_dish_arrayD.size(); j++){
+                            if(dish_ordered == id_dish_arrayD.get(j)){
+                                count_dish_ordered++;
+                                i++;
+                            }
                         }
                         String queryAddOrdered = "insert into ordered values(LAST_INSERT_ID(), "+dish_ordered+", "+count_dish_ordered+", "+id_table+", 'Ordered');";
                         statement.execute(queryAddOrdered);
+
+                        String query = "Select available from dish where id_dish="+dish_ordered+";";
+                        ResultSet result = statement.executeQuery(query);
+
+                        int number_availibitity = 0;
+                        if(result.next()){
+                            number_availibitity = Integer.parseInt(result.getString(1))- count_dish_ordered;
+                        }
+
+                        result.close();
+
+                        String queryUpdateAvailibility = "Update dish set available="+number_availibitity+" where id_dish="+dish_ordered+";";
+                        statement.execute(queryUpdateAvailibility);
                     }
                     JOptionPane.showMessageDialog(null, "Added to the database!");
-                    count = 0;
-                    id_dish_arrayD.clear();
 
                     statement.close();
+
+
+
+                    new mainInterfacePage(id_user, type);
+                    dispose();
                 }
                 catch (SQLException sqlException){
                     JOptionPane.showMessageDialog(null, sqlException);
