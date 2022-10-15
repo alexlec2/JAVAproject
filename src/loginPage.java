@@ -37,7 +37,7 @@ public class loginPage extends javax.swing.JFrame{
                     password += pass[i];
                 }
 
-                String queryString = "select id_user from `ser` where username='"+username+"' and password='"+password+"';";
+                String queryString = "select id_user from `user` where username='"+username+"' and password='"+password+"';";
 
                 try {
                     statement = MyJDBC.connection(statement);
