@@ -209,6 +209,19 @@ public class modifyOrderPage extends javax.swing.JFrame{
 
                         String queryAddOrdered = "insert into ordered values("+id_order+", "+dish_ordered+", "+count_dish_ordered+", "+id_table+", 'Ordered');";
                         statement.execute(queryAddOrdered);
+
+                        String query6 = "Select available from dish where id_dish="+dish_ordered+";";
+                        ResultSet result6 = statement.executeQuery(query6);
+
+                        int number_availibitity = 0;
+                        if(result6.next()){
+                            number_availibitity = Integer.parseInt(result.getString(1))- count_dish_ordered;
+                        }
+
+                        result6.close();
+
+                        String queryUpdateAvailibility = "Update dish set available="+number_availibitity+" where id_dish="+dish_ordered+";";
+                        statement.execute(queryUpdateAvailibility);
                     }
 
                     statement.close();
