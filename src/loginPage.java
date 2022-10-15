@@ -13,6 +13,7 @@ public class loginPage extends javax.swing.JFrame{
     private JPasswordField passwordField;
     private JPanel panelError;
     int id_login;
+    String type;
 
     Statement statement;
 
@@ -24,11 +25,10 @@ public class loginPage extends javax.swing.JFrame{
         setVisible(true);
         panelError.setVisible(false);
 
-        statement = MyJDBC.connection(statement);
-
         LOGINButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 String username = txtlogin.getText();
                 String password = "";
                 char[] pass = passwordField.getPassword();
@@ -37,22 +37,31 @@ public class loginPage extends javax.swing.JFrame{
                     password += pass[i];
                 }
 
-                String queryString = "select id_user from `user` where username='"+username+"' and password='"+password+"';";
+                String queryString = "select id_user from `ser` where username='"+username+"' and password='"+password+"';";
 
                 try {
+                    statement = MyJDBC.connection(statement);
+
                     ResultSet result = statement.executeQuery(queryString);
+
                     if(result.next()){
                         //JOptionPane.showMessageDialog(null, "Hello "+result.getString(1));
                         id_login = Integer.parseInt(result.getString(1));
-                        new mainInterfacePage(id_login);
+                        type = result.getString(2);
+                        new mainInterfacePage(id_login, type);
+                        result.close();
+                        statement.close();
                         dispose();
                     }
                     else {
                         panelError.setVisible(true);
                     }
+                    result.close();
+                    statement.close();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+
             }
         });
 

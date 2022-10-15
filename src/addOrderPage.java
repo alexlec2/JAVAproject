@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 
 import project.MyJDBC;
 
@@ -23,27 +25,40 @@ public final class addOrderPage extends javax.swing.JFrame{
     private JComboBox tableComboBox;
     private JButton returnButton1;
     private JButton historicButton4;
+    private JButton settingButton;
     int count = 0;
     double total_price = 0;
     Statement statement;
-    int[] id_dish_array = new int[100];
     ArrayList<Integer> id_dish_arrayD = new ArrayList<Integer>();
 
     DecimalFormat df = new DecimalFormat("#.##");
 
     public static void main(String[] args) {
-        new addOrderPage(1);
+        new addOrderPage(1, "Admin");
     }
 
-    addOrderPage(int id_user){
+    addOrderPage(int id_user, String type){
         setContentPane(addOrderMainPanel);
         setTitle("Java Project Add order page");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        statement = MyJDBC.connection(statement);
+
+        if(!Objects.equals(type, "Admin")){
+            settingButton.setVisible(false);
+        }
+
+        settingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new adminPage(id_user, type);
+                dispose();
+            }
+        });
 
         try{
+            statement = MyJDBC.connection(statement);
+
             ResultSet res_table = statement.executeQuery("select id_table from `table`;");
             ArrayList<Integer> list_table = new ArrayList<Integer>(100);
             int i = 0;
@@ -53,6 +68,7 @@ public final class addOrderPage extends javax.swing.JFrame{
             for(int j=0; j<list_table.size();j++){
                 tableComboBox.addItem("Table "+list_table.get(j));
             }
+            statement.close();
         }catch (SQLException sqlException){
             JOptionPane.showMessageDialog(null, sqlException);
         }
@@ -64,23 +80,48 @@ public final class addOrderPage extends javax.swing.JFrame{
             public void actionPerformed(ActionEvent e) {
 
                 try{
+                    statement = MyJDBC.connection(statement);
+
                     String id_table_string = (String) tableComboBox.getSelectedItem();
                     int id_table = Integer.parseInt(String.valueOf(id_table_string.charAt(id_table_string.length()-1)));
-                    String queryAddOrder = "insert into db_restaurant.order (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', now());";
-
+                    String queryAddOrder = "insert into `order` (id_table, id_user, status_order, date_order) values("+id_table+", "+id_user+", 'Ordered', now());";
                     statement.execute(queryAddOrder);
-                    while(!id_dish_arrayD.isEmpty()){
-                        int dish_ordered = id_dish_arrayD.get(0);
+
+                    int i = 0;
+                    Collections.sort(id_dish_arrayD);
+                    while(i < id_dish_arrayD.size()){
+                        int dish_ordered = id_dish_arrayD.get(i);
                         int count_dish_ordered=0;
-                        while(id_dish_arrayD.contains(dish_ordered)){
-                            count_dish_ordered++;
-                            id_dish_arrayD.remove(id_dish_arrayD.indexOf(dish_ordered));
+                        for (int j = i; j < id_dish_arrayD.size(); j++){
+                            if(dish_ordered == id_dish_arrayD.get(j)){
+                                count_dish_ordered++;
+                                i++;
+                            }
                         }
-                        String queryAddOrdered = "insert into ordered values(LAST_INSERT_ID(), "+dish_ordered+", "+count_dish_ordered+");";
+                        String queryAddOrdered = "insert into ordered values(LAST_INSERT_ID(), "+dish_ordered+", "+count_dish_ordered+", "+id_table+", 'Ordered');";
                         statement.execute(queryAddOrdered);
+
+                        String query = "Select available from dish where id_dish="+dish_ordered+";";
+                        ResultSet result = statement.executeQuery(query);
+
+                        int number_availibitity = 0;
+                        if(result.next()){
+                            number_availibitity = Integer.parseInt(result.getString(1))- count_dish_ordered;
+                        }
+
+                        result.close();
+
+                        String queryUpdateAvailibility = "Update dish set available="+number_availibitity+" where id_dish="+dish_ordered+";";
+                        statement.execute(queryUpdateAvailibility);
                     }
                     JOptionPane.showMessageDialog(null, "Added to the database!");
 
+                    statement.close();
+
+
+
+                    new mainInterfacePage(id_user, type);
+                    dispose();
                 }
                 catch (SQLException sqlException){
                     JOptionPane.showMessageDialog(null, sqlException);
@@ -92,7 +133,7 @@ public final class addOrderPage extends javax.swing.JFrame{
         returnButton1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new mainInterfacePage(id_user);
+                new mainInterfacePage(id_user, type);
                 dispose();
             }
         });
@@ -100,14 +141,13 @@ public final class addOrderPage extends javax.swing.JFrame{
         historicButton4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new historicPage(id_user);
+                new historicPage(id_user, type);
                 dispose();
             }
         });
     }
 
-    private void displayDishTable(String query1, JPanel panel) throws SQLException {
-        ResultSet result1 = statement.executeQuery(query1);
+    private void displayDishTable(ResultSet result1) throws SQLException {
 
         while (result1.next()){
             JPanel panelTemp = new JPanel();
@@ -163,44 +203,53 @@ public final class addOrderPage extends javax.swing.JFrame{
                 }
             });
 
-            panel.add(panelTemp);
+            String name = result1.getString(4);
+
+            if(name.equals(appetizerPanel.getName())){
+                appetizerPanel.add(panelTemp);
+            }
+            else if(name.equals(dishPanel.getName())){
+                dishPanel.add(panelTemp);
+            }
+            else if(name.equals(dessertPanel.getName())){
+                dessertPanel.add(panelTemp);
+            }
+            else if(name.equals(drinkPanel.getName())){
+                drinkPanel.add(panelTemp);
+            }
         }
-        result1.close();
     }
 
     private void createUIComponents() {
-        //connection database
-        statement = MyJDBC.connection(statement);
-
         //Display table dish + elements in tabs
         try{
-            String query1 = "Select * from dish where type='Appetizer'";
+            statement = MyJDBC.connection(statement);
+
+            String query1 = "Select * from dish";
+            ResultSet result1 = statement.executeQuery(query1);
+
             appetizerPanel = new JPanel();
+            appetizerPanel.setName("Appetizer");
             appetizerPanel.setLayout(new BoxLayout(appetizerPanel, BoxLayout.Y_AXIS));
-            displayDishTable(query1, appetizerPanel);
 
-
-            String query2 = "Select * from dish where type='Dishes'";
             dishPanel = new JPanel();
+            dishPanel.setName("Dishes");
             dishPanel.setLayout(new BoxLayout(dishPanel, BoxLayout.Y_AXIS));
-            displayDishTable(query2, dishPanel);
 
-
-            String query3 = "Select * from dish where type='Dessert'";
             dessertPanel = new JPanel();
+            dessertPanel.setName("Dessert");
             dessertPanel.setLayout(new BoxLayout(dessertPanel, BoxLayout.Y_AXIS));
-            displayDishTable(query3, dessertPanel);
 
-            String query4 = "Select * from dish where type='Drink'";
             drinkPanel = new JPanel();
+            drinkPanel.setName("Drink");
             drinkPanel.setLayout(new BoxLayout(drinkPanel, BoxLayout.Y_AXIS));
-            displayDishTable(query4, drinkPanel);
 
+            displayDishTable(result1);
+
+            result1.close();
+            statement.close();
 
             toOrderButton = new JButton("To order");
-
-
-
         }
         catch (Exception e){
             e.printStackTrace();

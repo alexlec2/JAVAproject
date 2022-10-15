@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.swing.table.DefaultTableModel;
 
 public class historicPage extends javax.swing.JFrame{
@@ -16,22 +17,30 @@ public class historicPage extends javax.swing.JFrame{
     private JComboBox comboBox1;
     private JButton returnButton4;
     private JComboBox comboBox2;
+    private JButton showBestDishButton;
+    private JButton showCommandOfButton;
+    private JComboBox comboBox3;
+    private JButton settingButton;
 
     Statement statement;
 
     public static void main(String[] args) {
-        new historicPage(1);
+        new historicPage(1, "Admin");
     }
 
-    historicPage(int id_user){
+    historicPage(int id_user, String type){
         setContentPane(mainPanel);
         setTitle("Java Project Historic page");
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         statement = MyJDBC.connection(statement);
-        comboBox1.addItem("every table");
-        comboBox2.addItem("every user");
+        comboBox1.addItem("all table");
+        comboBox2.addItem("all user");
+        comboBox3.addItem("Today");
+        comboBox3.addItem("Last week");
+        comboBox3.addItem("Last month");
+        comboBox3.addItem("Last year");
 
         try{
             ResultSet res_table = statement.executeQuery("select id_table from `table`;");
@@ -69,6 +78,54 @@ public class historicPage extends javax.swing.JFrame{
         ///////////////////
 
         setVisible(true);
+        showCommandOfButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String QUERY="";
+                String x_time = (String) comboBox3.getSelectedItem();
+                String time_last_day = String.valueOf(java.time.LocalDate.now().minusDays(1));
+                String time_last_week = String.valueOf(java.time.LocalDate.now().minusWeeks(1));
+                String time_last_month = String.valueOf(java.time.LocalDate.now().minusMonths(1));
+                String time_last_year = String.valueOf(java.time.LocalDate.now().minusYears(1));
+                if(x_time.equals("Today")){
+                    QUERY = "select date_order, name, number from `order`, dish, ordered WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' and date_order>'"+time_last_day+"';";
+                }
+                if(x_time.equals("Last week")){
+                    QUERY = "select date_order, name, number from `order`, dish, ordered WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' and date_order>'"+time_last_week+"';";
+                }
+                if(x_time.equals("Last month")){
+                    QUERY = "select date_order, name, number from `order`, dish, ordered WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' and date_order>'"+time_last_month+"';";
+                }
+                if(x_time.equals("Last year")){
+                    QUERY = "select date_order, name, number from `order`, dish, ordered WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' and date_order>'"+time_last_year+"';";
+                }
+                try{
+                    ResultSet rs = statement.executeQuery(QUERY);
+
+                    resultSetToTableModel(rs, historicTable);
+                    //Description.setModel(DbUtils.resultSetToTableModel(rs));
+
+                }catch(SQLException ex){
+                    System.out.println(ex);
+                }
+
+            }
+        });
+        showBestDishButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String QUERY = "SELECT dish.id_dish, dish.name, SUM(ordered.number) AS total_number FROM ordered, dish, `order` WHERE ordered.id_dish=dish.id_dish and `order`.status_order='ended' GROUP BY id_dish ORDER BY total_number DESC;";
+                try{
+                    ResultSet rs = statement.executeQuery(QUERY);
+
+                    resultSetToTableModel(rs, historicTable);
+                    //Description.setModel(DbUtils.resultSetToTableModel(rs));
+
+                }catch(SQLException ex){
+                    System.out.println(ex);
+                }
+            }
+        });
         showButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -114,7 +171,19 @@ public class historicPage extends javax.swing.JFrame{
         returnButton4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new mainInterfacePage(id_user);
+                new mainInterfacePage(id_user, type);
+                dispose();
+            }
+        });
+
+        if(!Objects.equals(type, "Admin")){
+            settingButton.setVisible(false);
+        }
+
+        settingButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new adminPage(id_user, type);
                 dispose();
             }
         });

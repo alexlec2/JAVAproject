@@ -6,7 +6,7 @@ public class adminPage extends javax.swing.JFrame{
     private JPanel mainAdminPage;
     private JButton returnButton2;
 
-    adminPage(int id_user){
+    adminPage(int id_user, String type){
         setContentPane(mainAdminPage);
         setTitle("Java Project Admin Page");
         setSize(400,800);
@@ -16,7 +16,7 @@ public class adminPage extends javax.swing.JFrame{
         returnButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new mainInterfacePage(id_user);
+                new mainInterfacePage(id_user, type);
                 dispose();
             }
         });
