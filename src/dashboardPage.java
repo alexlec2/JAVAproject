@@ -16,6 +16,9 @@ public class dashboardPage extends javax.swing.JFrame{
     private JButton historicButton3;
     private JButton settingButton;
     private JPanel DashBpanel;
+    private JButton endedCommandNButton;
+    private JComboBox comboBox1;
+    private JPanel Orderpanel;
     Statement statement;
 
     public static void main(String[] args) {
@@ -27,6 +30,7 @@ public class dashboardPage extends javax.swing.JFrame{
         setSize(400,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
+
 
         if(!Objects.equals(type, "Admin")){
             settingButton.setVisible(false);
@@ -55,6 +59,21 @@ public class dashboardPage extends javax.swing.JFrame{
                 dispose();
             }
         });
+
+        endedCommandNButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String id = String.valueOf(comboBox1.getSelectedItem());
+                try {
+                    statement =MyJDBC.connection(statement);
+                    statement.execute("UPDATE `order` SET `order`.status_order = 'ended' WHERE `order`.status_order='Ordered' and `order`.id_order="+id+";");
+                }catch (SQLException ex){
+                    System.out.println(ex);
+                }
+            }
+        });
+
+
     }
 
     private void createUIComponents() {
@@ -81,6 +100,22 @@ public class dashboardPage extends javax.swing.JFrame{
         }catch (SQLException ex){
             System.out.println(ex);
         }
+
+        comboBox1 = new JComboBox<>();
+        try {
+            statement = MyJDBC.connection(statement);
+            ResultSet rs = statement.executeQuery("SELECT DISTINCT `order`.id_order from `order`, ordered, dish WHERE `order`.status_order='Ordered' and ordered.id_dish=dish.id_dish and `order`.id_order=ordered.id_order;");
+            while(rs.next()){
+                comboBox1.addItem(rs.getString("id_order"));
+            }
+            statement.close();
+            rs.close();
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+
+
+
 
 
 
