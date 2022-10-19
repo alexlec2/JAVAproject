@@ -21,6 +21,7 @@ public class historicPage extends javax.swing.JFrame{
     private JButton showCommandOfButton;
     private JComboBox comboBox3;
     private JButton settingButton;
+    private JButton BTNDash;
 
     Statement statement;
 
@@ -78,6 +79,13 @@ public class historicPage extends javax.swing.JFrame{
         ///////////////////
 
         setVisible(true);
+        BTNDash.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new dashboardPage(id_user, type);
+                dispose();
+            }
+        });
         showCommandOfButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

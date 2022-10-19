@@ -26,6 +26,7 @@ public final class addOrderPage extends javax.swing.JFrame{
     private JButton returnButton1;
     private JButton historicButton4;
     private JButton settingButton;
+    private JButton BTNDash;
     int count = 0;
     double total_price = 0;
     Statement statement;
@@ -74,6 +75,14 @@ public final class addOrderPage extends javax.swing.JFrame{
         }
 
         setVisible(true);
+
+        BTNDash.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new dashboardPage(id_user, type);
+                dispose();
+            }
+        });
 
         toOrderButton.addActionListener(new ActionListener() {
             @Override

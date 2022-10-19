@@ -12,6 +12,7 @@ public class mainInterfacePage extends javax.swing.JFrame{
     private JPanel menuPanel;
     private JButton historicButton1;
     private JButton settingButton;
+    private JButton BTNDash;
     private JLabel testWelcome;
 
     public static void main(String[] args) {
@@ -62,6 +63,13 @@ public class mainInterfacePage extends javax.swing.JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 new historicPage(id_user, type);
+                dispose();
+            }
+        });
+        BTNDash.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new dashboardPage(id_user, type);
                 dispose();
             }
         });

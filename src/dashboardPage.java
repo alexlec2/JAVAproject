@@ -22,7 +22,7 @@ public class dashboardPage extends javax.swing.JFrame{
     Statement statement;
 
     public static void main(String[] args) {
-        new dashboardPage(1, "admin");
+        new dashboardPage(1, "Admin");
     }
     dashboardPage(int id_user, String type){
         setContentPane(mainDashboardPanel);

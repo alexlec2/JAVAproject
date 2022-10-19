@@ -22,6 +22,7 @@ public class adminPage extends javax.swing.JFrame{
     private JComboBox comboBoxLocation;
     private JSpinner spinnerCapacity;
     private JComboBox comboBoxType;
+    private JButton BTNDash;
 
     Statement statement;
 
@@ -73,6 +74,13 @@ public class adminPage extends javax.swing.JFrame{
                 catch (Exception ex){
                     ex.printStackTrace();
                 }
+            }
+        });
+        BTNDash.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new dashboardPage(id_user, type);
+                dispose();
             }
         });
         applyDeleteTableButton.addActionListener(new ActionListener() {

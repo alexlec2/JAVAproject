@@ -37,6 +37,7 @@ public class modifyOrderPage extends javax.swing.JFrame{
     private JButton applyButton;
     private JTextField textIdOrderTable;
     private JComboBox comboBox1;
+    private JButton BTNDash;
     Statement statement;
     Statement statement2;
     int count = 0;
@@ -271,6 +272,13 @@ public class modifyOrderPage extends javax.swing.JFrame{
                 catch (SQLException es){
                     System.out.println(es);
                 }
+            }
+        });
+        BTNDash.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new dashboardPage(id_user, type);
+                dispose();
             }
         });
     }
