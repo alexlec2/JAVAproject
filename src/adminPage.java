@@ -36,7 +36,6 @@ public class adminPage extends javax.swing.JFrame{
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
-
         returnButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

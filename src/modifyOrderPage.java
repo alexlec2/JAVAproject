@@ -210,7 +210,7 @@ public class modifyOrderPage extends javax.swing.JFrame{
 
                         int number_availibitity = 0;
                         if(result6.next()){
-                            number_availibitity = Integer.parseInt(result.getString(1))- count_dish_ordered;
+                            number_availibitity = Integer.parseInt(result6.getString(1))- count_dish_ordered;
                         }
 
                         result6.close();

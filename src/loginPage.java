@@ -1,9 +1,12 @@
 import project.MyJDBC;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+
 
 
 public class loginPage extends javax.swing.JFrame{
@@ -12,6 +15,7 @@ public class loginPage extends javax.swing.JFrame{
     private JButton LOGINButton;
     private JPasswordField passwordField;
     private JPanel panelError;
+    private JPanel panel1;
     int id_login;
     String type;
 
@@ -65,5 +69,35 @@ public class loginPage extends javax.swing.JFrame{
             }
         });
 
+    }
+
+    private static class RoundedBorder implements Border {
+
+        private int radius;
+
+        RoundedBorder(int radius) {
+            this.radius = radius;
+        }
+        @Override
+        public Insets getBorderInsets(Component c) {
+            return new Insets(this.radius+1, this.radius+1, this.radius+2, this.radius);
+        }
+
+        @Override
+        public boolean isBorderOpaque() {
+            return true;
+        }
+
+        @Override
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            g.drawRoundRect(x,y,width-1,height-1,radius,radius);
+        }
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+
+        panel1 = new JPanel();
+        //panel1.setBorder(new RoundedBorder(50));
     }
 }
