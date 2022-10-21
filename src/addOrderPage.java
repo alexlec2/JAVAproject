@@ -41,7 +41,7 @@ public final class addOrderPage extends javax.swing.JFrame{
     addOrderPage(int id_user, String type){
         setContentPane(addOrderMainPanel);
         setTitle("Java Project Add order page");
-        setSize(400,800);
+        setSize(500,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 
