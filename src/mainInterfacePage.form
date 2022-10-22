@@ -5,7 +5,9 @@
     <constraints>
       <xy x="20" y="20" width="425" height="719"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-787719"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="af551" binding="inputPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -13,23 +15,33 @@
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-787719"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="285f3" class="javax.swing.JButton" binding="addOrderButton" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="40"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
+              <foreground color="-16777216"/>
               <margin top="10" left="10" bottom="10" right="10"/>
               <text value="Add order"/>
             </properties>
           </component>
           <component id="a10ef" class="javax.swing.JButton" binding="searchModifyOrderButton" default-binding="true">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="40"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
+              <foreground color="-16777216"/>
               <margin top="10" left="10" bottom="10" right="10"/>
               <text value="Search / modify order"/>
             </properties>
@@ -51,22 +63,32 @@
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-787719"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="4757e" class="javax.swing.JButton" binding="logOutButton" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="40"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
+              <foreground color="-16777216"/>
               <text value="Log out"/>
             </properties>
           </component>
           <component id="65fcd" class="javax.swing.JButton" binding="BTNDash">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="40"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
+              <foreground color="-16777216"/>
               <text value="Dashboard"/>
             </properties>
           </component>
@@ -82,14 +104,20 @@
         <constraints>
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-787719"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="33583" class="javax.swing.JButton" binding="historicButton1">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="40"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
+              <foreground color="-16777216"/>
               <text value="Historic"/>
             </properties>
           </component>
@@ -100,9 +128,13 @@
           </hspacer>
           <component id="dd450" class="javax.swing.JButton" binding="settingButton" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="40"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
+              <foreground color="-16777216"/>
               <text value="Settings"/>
             </properties>
           </component>

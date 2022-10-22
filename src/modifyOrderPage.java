@@ -50,7 +50,7 @@ public class modifyOrderPage extends javax.swing.JFrame{
     modifyOrderPage(int id_user, String type){
         setContentPane(mainModifyPanel);
         setTitle("Java Project Modify order page");
-        setSize(400,800);
+        setSize(500,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 

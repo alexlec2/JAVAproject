@@ -71,11 +71,6 @@ public class historicPage extends javax.swing.JFrame{
         }catch (SQLException ex){
             System.out.println(ex);
         }
-        ////////DESIGN//////
-        mainPanel.setBackground(new Color(209, 237, 242));
-        tabelPanel.setBackground(new Color(209, 237, 242));
-        comboBox1.setForeground(Color.BLUE);
-        comboBox2.setForeground(Color.BLUE);
         ///////////////////
 
         setVisible(true);

@@ -5,7 +5,9 @@
     <constraints>
       <xy x="20" y="20" width="387" height="608"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-787719"/>
+    </properties>
     <border type="none"/>
     <children>
       <grid id="4e9fa" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -13,14 +15,19 @@
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-787719"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="11a2" class="javax.swing.JButton" binding="returnButton3">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="40"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
               <text value="&lt;--"/>
             </properties>
           </component>
@@ -36,14 +43,19 @@
         <constraints>
           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-787719"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="5843b" class="javax.swing.JButton" binding="historicButton3">
             <constraints>
-              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="40"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
               <text value="Historic"/>
             </properties>
           </component>
@@ -54,9 +66,12 @@
           </hspacer>
           <component id="82585" class="javax.swing.JButton" binding="settingButton" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="40"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
               <text value="Settings"/>
             </properties>
           </component>
@@ -67,7 +82,9 @@
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-787719"/>
+        </properties>
         <border type="none"/>
         <children/>
       </grid>
@@ -86,14 +103,19 @@
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-787719"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="7d4c5" class="javax.swing.JButton" binding="endedCommandNButton" default-binding="true">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="35"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
               <text value="Ended Command n°"/>
             </properties>
           </component>
@@ -110,14 +132,19 @@
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-787719"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="5ae81" class="javax.swing.JButton" binding="searchButton">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <preferred-size width="100" height="35"/>
+              </grid>
             </constraints>
             <properties>
+              <font name="Galvji" size="14" style="0"/>
               <text value="Search / modify order"/>
             </properties>
           </component>
