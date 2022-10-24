@@ -5,13 +5,13 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 public class MyJDBC  {
-
     public static Statement connection(Statement statement){
         try {
-            String ip = "212.227.188.100";
+            server s = new server();
+            String ip = s.ip;
             String port = "2022";
             String user = "javaRestaurant";
-            String password = "$ja3va!R3st5auran5t.926";
+            String password = s.password;
             String database_name = "db_restaurant";
             Connection connection = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + database_name + "", user, password);
 

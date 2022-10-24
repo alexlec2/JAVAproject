@@ -76,7 +76,7 @@
                 <properties>
                   <font size="14" style="1"/>
                   <foreground color="-16777216"/>
-                  <text value="Table id:"/>
+                  <text value="Create table n°:"/>
                 </properties>
               </component>
               <component id="16b09" class="javax.swing.JTextField" binding="numeroTabletxt">
